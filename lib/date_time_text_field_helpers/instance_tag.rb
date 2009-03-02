@@ -12,9 +12,9 @@ module DateTimeTextFieldHelpers
     def to_datetime_text_field_tag(options = {})
       date_or_time_text_field options
     end
-    
+
     def text_field_for_date_part(part, datetime, options = {})
-      part_method = case part 
+      part_method = case part
         when :minute then :min
         when :second then :sec
         else              part
@@ -27,18 +27,18 @@ module DateTimeTextFieldHelpers
         datetime_text_field_html(part, value, options.merge(:class => "#{part}_field"))
       end
     end
-    
+
     private
-    
+
     # Adapted from the Rails source date_or_time_select method to use text fields
     # instead of selects and adds a few extra options
     def date_or_time_text_field(options)
-      defaults = { :discard_type => true, 
+      defaults = { :discard_type => true,
                    :date_separator => '-',
                    :time_separator => ':',
-                   :date_time_separator => '&mdash;', 
+                   :date_time_separator => '&mdash;',
                    :class => 'date_time_field' }
-                   
+
       options  = defaults.merge(options)
       datetime = value(object)
       datetime ||= default_time_from_options(options[:default]) unless options[:blank]
@@ -80,28 +80,28 @@ module DateTimeTextFieldHelpers
             when :year, :month, :day then (discard[param] || order.index(param) == 0)  ? '' : " #{options[:date_separator]} "
             when :hour then (discard[:year] && discard[:day] ? "" : " #{options[:date_time_separator]} ")
             when :minute then " #{options[:time_separator]} "
-            when :second then options[:include_seconds] ? " #{options[:time_separator]} " : ""          
+            when :second then options[:include_seconds] ? " #{options[:time_separator]} " : ""
             else ''
           end)
       end
 
       content_tag(:span, date_or_time_text_field, :class => options[:class], :id => "#{@object_name}_#{@method_name}")
     end
-    
+
     # Extracts field name with position as params key to find
     # value user submitted for this field if any
     def extract_field_param_value(options)
       field_name = options[:name].scan(/\[(.*?)\]/).first.first
       param_value = nil
-      if @template_object.params[@object_name] 
+      if @template_object.params[@object_name]
         param_value = @template_object.params[@object_name][field_name]
       end
       param_value
-    end  
-    
+    end
+
     # Constructs html for field and inserts value from params if exists
     # otherwise it uses the column value from the object. This allows
-    # better user feedback if they have put in bogus values, they will 
+    # better user feedback if they have put in bogus values, they will
     # be able see the value after submitting and getting an error back.
     def datetime_text_field_html(type, value, options)
       name_and_id_from_options(options, type)
@@ -113,6 +113,59 @@ module DateTimeTextFieldHelpers
       end
       datetime_text_field_html = %(<input type="text" id="#{options[:id]}" name="#{options[:name]}" size="#{size}" value="#{value}" class="#{options[:class]}" />)
     end
+
+
+
+
+
+
+
+    # The below methods are a direct copy from: /usr/share/rails/actionpack/lib/action_view/helpers/date_helper.rb
+    #
+    # For some reason we cannot access these methods from this plugin.
+
+
+    def default_time_from_options(default)
+      case default
+      when nil
+        Time.current
+      when Date, Time
+        default
+      else
+        # Rename :minute and :second to :min and :sec
+        default[:min] ||= default[:minute]
+        default[:sec] ||= default[:second]
+
+        time = Time.current
+
+        [:year, :month, :day, :hour, :min, :sec].each do |key|
+          default[key] ||= time.send(key)
+        end
+
+        Time.utc_time(default[:year], default[:month], default[:day], default[:hour], default[:min], default[:sec])
+      end
+    end
+
+    def options_with_prefix(position, options)
+      prefix = "#{@object_name}"
+      if options[:index]
+        prefix << "[#{options[:index]}]"
+      elsif @auto_index
+        prefix << "[#{@auto_index}]"
+      end
+      options.merge(:prefix => "#{prefix}[#{@method_name}(#{position}i)]")
+    end
+
+    def leading_zero_on_single_digits(number)
+      number > 9 ? number : "0#{number}"
+    end
+
+    def name_and_id_from_options(options, type)
+      options[:name] = (options[:prefix] || DEFAULT_PREFIX) + (options[:discard_type] ? '' : "[#{type}]")
+      options[:id] = options[:name].gsub(/([\[\(])|(\]\[)/, '_').gsub(/[\]\)]/, '')
+    end
+
+
 
   end
 end
