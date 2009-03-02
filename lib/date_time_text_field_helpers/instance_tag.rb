@@ -41,7 +41,7 @@ module DateTimeTextFieldHelpers
 
       options  = defaults.merge(options)
       datetime = value(object)
-      datetime ||= default_time_from_options(options[:default]) unless options[:blank]
+      datetime ||= default_datetime(options) unless options[:blank]
 
       position = { :year => 1, :month => 2, :day => 3, :hour => 4, :minute => 5, :second => 6 }
 
@@ -123,29 +123,6 @@ module DateTimeTextFieldHelpers
     # The below methods are a direct copy from: /usr/share/rails/actionpack/lib/action_view/helpers/date_helper.rb
     #
     # For some reason we cannot access these methods from this plugin.
-
-
-    def default_time_from_options(default)
-      case default
-      when nil
-        Time.current
-      when Date, Time
-        default
-      else
-        # Rename :minute and :second to :min and :sec
-        default[:min] ||= default[:minute]
-        default[:sec] ||= default[:second]
-
-        time = Time.current
-
-        [:year, :month, :day, :hour, :min, :sec].each do |key|
-          default[key] ||= time.send(key)
-        end
-
-        Time.utc_time(default[:year], default[:month], default[:day], default[:hour], default[:min], default[:sec])
-      end
-    end
-
     def options_with_prefix(position, options)
       prefix = "#{@object_name}"
       if options[:index]
@@ -164,8 +141,5 @@ module DateTimeTextFieldHelpers
       options[:name] = (options[:prefix] || DEFAULT_PREFIX) + (options[:discard_type] ? '' : "[#{type}]")
       options[:id] = options[:name].gsub(/([\[\(])|(\]\[)/, '_').gsub(/[\]\)]/, '')
     end
-
-
-
   end
 end
