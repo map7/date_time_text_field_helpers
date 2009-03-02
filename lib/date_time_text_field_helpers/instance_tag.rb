@@ -114,32 +114,38 @@ module DateTimeTextFieldHelpers
       datetime_text_field_html = %(<input type="text" id="#{options[:id]}" name="#{options[:name]}" size="#{size}" value="#{value}" class="#{options[:class]}" />)
     end
 
+    if Rails::VERSION::STRING < '2.2'
 
-
-
-
-
-
-    # The below methods are a direct copy from: /usr/share/rails/actionpack/lib/action_view/helpers/date_helper.rb
-    #
-    # For some reason we cannot access these methods from this plugin.
-    def options_with_prefix(position, options)
-      prefix = "#{@object_name}"
-      if options[:index]
-        prefix << "[#{options[:index]}]"
-      elsif @auto_index
-        prefix << "[#{@auto_index}]"
+      def default_datetime(options)
+        default_time_from_options(options[:default])
       end
-      options.merge(:prefix => "#{prefix}[#{@method_name}(#{position}i)]")
-    end
 
-    def leading_zero_on_single_digits(number)
-      number > 9 ? number : "0#{number}"
-    end
+    else
 
-    def name_and_id_from_options(options, type)
-      options[:name] = (options[:prefix] || DEFAULT_PREFIX) + (options[:discard_type] ? '' : "[#{type}]")
-      options[:id] = options[:name].gsub(/([\[\(])|(\]\[)/, '_').gsub(/[\]\)]/, '')
+      def options_with_prefix(position, options)
+        prefix = "#{@object_name}"
+        if options[:index]
+          prefix << "[#{options[:index]}]"
+        elsif @auto_index
+          prefix << "[#{@auto_index}]"
+        end
+        options.merge(:prefix => "#{prefix}[#{@method_name}(#{position}i)]")
+      end
+
+      def name_and_id_from_options(options, type)
+        options[:name] = (options[:prefix] || 'date') + (options[:discard_type] ? '' : "[#{type}]")
+        options[:id] = options[:name].gsub(/([\[\(])|(\]\[)/, '_').gsub(/[\]\)]/, '')
+      end
+
+      def leading_zero_on_single_digits(number)
+        number > 9 ? number : "0#{number}"
+      end
+
+      def hidden_html(type, value, options)
+        name_and_id_from_options(options, type)
+        hidden_html = tag(:input, :type => "hidden", :id => options[:id], :name => options[:name], :value => value) + "\n"
+      end
+
     end
   end
 end
