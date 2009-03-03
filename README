@@ -31,6 +31,18 @@ pay attention.
 * Harnesses the power of Ruby on Rails to maximize your potential to be the
   person you really want to be.
 
+== Installation
+
+Installation of the plugin:
+
+ruby script/plugin install git://github.com/adzap/date_time_text_field_helpers.git
+
+
+To install the optional autotab feature type the following:
+
+script/generate date_time_text_field_helpers
+
+
 
 == Usage
 
