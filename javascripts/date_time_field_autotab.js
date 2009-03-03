@@ -14,6 +14,7 @@ var AutoJumpToNextOnLength = Behavior.create({
   },
   onkeydown: function(e)
   {
+
       // Detect if there is selected text, if there is remove that selected text now.
       selection = this.element.getValue().substring(this.element.selectionStart, this.element.selectionEnd).length
 
