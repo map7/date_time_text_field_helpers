@@ -9,10 +9,15 @@ var AutoJumpToNextOnLength = Behavior.create({
     this.inputLength = inputLength;
     this.element.setAttribute('autocomplete','off');
     this.keyRange = $R(48, 90).toArray().concat($R(96, 105).toArray()); // all alphanumeric characters
+    this.keyIgnore = $R(110, 190).toArray();
   },
   onkeydown: function(e)
   {
     // Stops extra characters being entered    
+      if (this.keyIgnore.include(e.keyCode)){
+	  return false;
+      }
+
     if (this.keyRange.include(e.keyCode)) {
       return !(this.element.getValue().length >= this.inputLength);
     } else {
@@ -28,6 +33,8 @@ var AutoJumpToNextOnLength = Behavior.create({
         // No next field 
         return false;
       }
+    }else{
+	alert(e.keyCode);
     }
   }
 });
