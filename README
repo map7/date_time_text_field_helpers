@@ -42,6 +42,8 @@ To install the optional autotab feature type the following:
 
 script/generate date_time_text_field_helpers
 
+To allow autotab to work with Ajax forms you must add the following to your application.js file
+  Event.addBehavior.reassignAfterAjax = true;
 
 
 == Usage
