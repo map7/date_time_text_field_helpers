@@ -10,6 +10,8 @@
 
 */
 
+var counter = 0;
+
 
 var AutoJumpToNextOnLength = Behavior.create({
   initialize: function(inputLength)
@@ -22,18 +24,40 @@ var AutoJumpToNextOnLength = Behavior.create({
 
   }, 
 
+  onkeypress: function(e)
+  {
+      counter += 1;
+      console.log(counter);
+
+      console.log('element length = ' + this.element.getValue().length);
+      console.log('input length   = ' + this.inputLength);
+
+      if ((this.element.getValue().length > this.inputLength)) {  
+	  try {
+	      this.element.next().focus();
+	      this.element.next().select();
+	  } catch(err) {
+	      // No next field 
+	      return false;
+	  }
+      }
+
+  },
 
   onkeydown: function(e)
   {
+      counter = 0;
+      console.log(e.keyCode);
 
-    // Stops extra characters being entered    
+
+      // Stops extra characters being entered    
       if (!this.keyRange.include(e.keyCode)){
 	  return false;
       }
 
       // Detect if there is selected text, if there is remove that selected text now.
-      selection = this.element.getValue().substring(this.element.selectionStart, this.element.selectionEnd).length
-
+      selection = this.element.getValue().substring(this.element.selectionStart, this.element.selectionEnd).length;
+	      
       if (selection == 0) {
 	  // Stops extra characters being entered    
 	  if (this.keyRange.include(e.keyCode)) {
@@ -45,21 +69,25 @@ var AutoJumpToNextOnLength = Behavior.create({
   },
   onkeyup: function(e)
   {
+
+      counter = 0;
+
+
       // Detect if there is selected text, if there is remove that selected text now.
-      selection = this.element.getValue().substring(this.element.selectionStart, this.element.selectionEnd).length
+      selection = this.element.getValue().substring(this.element.selectionStart, this.element.selectionEnd).length;
 
       if (selection == 0) {
 
-	      if (this.keyRange.include(e.keyCode) && (this.element.getValue().length == this.inputLength)) {  
-		  try {
-		      this.element.next().focus();
-		      this.element.next().select();
-		  } catch(err) {
-		      // No next field 
-		      return false;
-		  }
+	  if (this.keyRange.include(e.keyCode) && (this.element.getValue().length == this.inputLength)) {  
+	      try {
+		  this.element.next().focus();
+		  this.element.next().select();
+	      } catch(err) {
+		  // No next field 
+		  return false;
 	      }
 	  }
+      }
   }
 });
 
