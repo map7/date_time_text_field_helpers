@@ -16,8 +16,12 @@ var AutoJumpToNextOnLength = Behavior.create({
   {
     this.inputLength = inputLength;
     this.element.setAttribute('autocomplete','off');
-    this.keyRange = $R(48, 57).toArray(); // numberic characters
+    this.keyRange = $R(48, 57).toArray().concat($R(96, 105).toArray()); // all numberic characters
+    this.keyRange = this.keyRange.concat([8]); // backspace
+    this.keyRange = this.keyRange.concat([9, 16, 18]); // tab (forward, back, alt-tab)
+
   }, 
+
 
   onkeydown: function(e)
   {
