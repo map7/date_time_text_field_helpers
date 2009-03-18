@@ -2,6 +2,12 @@
  http://svn.danwebb.net/external/lowpro/tags/rel_0.5/dist/lowpro.js
  
  I am no javascript pro so feel free to improve it and let me know. 
+
+ If you are using AJAX based forms and reloading the partial only then you will 
+ need to add the following to the top of your form to reattach the event handlers:
+
+ <script>addHandlers();</script>
+
 */
 
 
@@ -56,7 +62,10 @@ var AutoJumpToNextOnLength = Behavior.create({
   }
 });
 
+// Add handlers when loaded.
+addHandlers();
 
-
-Event.addBehavior({'.day_field, .month_field, .hour_field, .minute_field, second_field' : AutoJumpToNextOnLength(2)});
-Event.addBehavior({'.year_field' : AutoJumpToNextOnLength(4)});
+function addHandlers(){
+    Event.addBehavior({'.day_field, .month_field, .hour_field, .minute_field, second_field' : AutoJumpToNextOnLength(2)});
+    Event.addBehavior({'.year_field' : AutoJumpToNextOnLength(4)});
+}
