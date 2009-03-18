@@ -16,16 +16,14 @@ var AutoJumpToNextOnLength = Behavior.create({
   {
     this.inputLength = inputLength;
     this.element.setAttribute('autocomplete','off');
-    this.keyRange = $R(48, 57).toArray().concat($R(96, 105).toArray()); // all numberic characters
-
-    this.keyAllow = $R(48, 57).toArray();
+    this.keyRange = $R(48, 57).toArray(); // numberic characters
   }, 
 
   onkeydown: function(e)
   {
 
     // Stops extra characters being entered    
-      if (!this.keyAllow.include(e.keyCode)){
+      if (!this.keyRange.include(e.keyCode)){
 	  return false;
       }
 
