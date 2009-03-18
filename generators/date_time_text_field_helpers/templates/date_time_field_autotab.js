@@ -18,15 +18,14 @@ var AutoJumpToNextOnLength = Behavior.create({
     this.element.setAttribute('autocomplete','off');
     this.keyRange = $R(48, 57).toArray().concat($R(96, 105).toArray()); // all numberic characters
 
-    this.keyIgnore = $R(58, 95).toArray().concat($R(106, 230).toArray());  // Ignore alpha characters from date fields.
-    this.keyIgnore = this.keyIgnore.concat([32]);  // Note: 39 is the character ' but also the right key.
+    this.keyAllow = $R(48, 57).toArray();
   }, 
 
   onkeydown: function(e)
   {
 
     // Stops extra characters being entered    
-      if (this.keyIgnore.include(e.keyCode)){
+      if (!this.keyAllow.include(e.keyCode)){
 	  return false;
       }
 
